@@ -1,0 +1,18 @@
+# TMDB 刮削相关域名
+DOMAIN-SUFFIX,themoviedb.org
+DOMAIN-SUFFIX,tmdb.org
+DOMAIN-SUFFIX,thetvdb.com
+DOMAIN-KEYWORD,themoviedb
+DOMAIN-KEYWORD,tmdb
+
+# TMDB 图片及静态资源
+DOMAIN,image.tmdb.org
+DOMAIN,api.themoviedb.org
+DOMAIN,api.tmdb.org
+DOMAIN,assets.tmdb.org
+DOMAIN,static.p-tmdb.com
+
+# 辅助元数据与关联服务（部分刮削器会用到）
+DOMAIN-SUFFIX,tvmaze.com
+DOMAIN-SUFFIX,omdbapi.com
+DOMAIN-SUFFIX,fanart.tv
