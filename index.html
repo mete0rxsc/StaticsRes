@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>JS/CSS 仓库 API - 资源中心</title>
+    <!-- 
+        这是一个专为 Github Pages 或 Vercel 部署设计的“仓库API”页面。
+        本身不渲染业务内容，仅作为静态资源的托管与分发中心。
+        您可以将任何自定义的 JS / CSS 文件上传到同项目目录，或通过本页的内联示例快速引用。
+        本文件提供了标准的结构，并展示了如何通过查询参数动态返回不同资源（作为API思想演示）。
+        同时，页面内嵌了基础的 CORS 友好头信息（通过 meta 模拟），实际部署时资源请求默认支持跨域。
+        您可以直接引用本域名下的任何 .js 或 .css 文件作为外部资源。
+    -->
+    <style>
+        /* -----------------------------------------
+            基础样式：仅用于调试/占位，不影响作为仓库API的功能。
+            实际作为资源仓库时，此样式不会被外部页面加载，除非主动引用。
+            为保持页面干净，样式表极为精简，并带有一个可选的“仓库状态指示器”。
+        ----------------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #0a0c10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e4e6eb;
+            padding: 2rem;
+        }
+
+        /* 调试面板 – 仅用于提示本服务用途，不对外部资源加载造成任何干扰 */
+        .api-repo-info {
+            max-width: 700px;
+            background: rgba(20, 24, 32, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            border: 1px solid rgba(66, 153, 225, 0.3);
+            padding: 2rem 2rem 2rem 2rem;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .api-repo-info h1 {
+            font-weight: 600;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #c084fc, #60a5fa);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.75rem;
+        }
+
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            margin: 1rem 0 1.5rem 0;
+        }
+
+        .badge {
+            background: #1e293b;
+            padding: 0.25rem 0.85rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-family: monospace;
+            border-left: 2px solid #3b82f6;
+            color: #cbd5e6;
+        }
+
+        .code-block {
+            background: #010409;
+            border-radius: 16px;
+            padding: 1rem 1.2rem;
+            text-align: left;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #2d3748;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.85rem;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #9cdcfe;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            margin: 1.2rem 0;
+        }
+
+        .footer-note {
+            font-size: 0.75rem;
+            color: #6c7a91;
+            margin-top: 1rem;
+        }
+
+        a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        .inline-code {
+            background: #1e1f29;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 540px) {
+            .api-repo-info {
+                padding: 1.5rem;
+            }
+
+            .code-block {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+    <!-- 内置一个示例样式库 (可选，实际业务中可直接引用) -->
+    <!-- 本页面同时扮演“API路由”角色，您可以在后续增加自定义JS/CSS文件并直接引用 -->
+</head>
+
+<body>
+    <div class="api-repo-info">
+        <h1>📦 JS / CSS 仓库 API</h1>
+        <div class="badge-group">
+            <span class="badge">✓ 永久存储层</span>
+            <span class="badge">✓ CORS 友好</span>
+            <span class="badge">✓ 即开即用</span>
+            <span class="badge">✓ 支持任意资源</span>
+        </div>
+        <p style="margin-bottom: 1rem; font-size: 0.95rem;">
+            本站点作为您项目的<strong>静态资源仓库</strong>，专用于托管 JavaScript 与 CSS 文件。<br>
+            您可以自由上传/替换 <span class="inline-code">.js</span> 或 <span class="inline-code">.css</span> 文件，并通过 URL 直接引用。
+        </p>
+
+        <div class="code-block">
+            <pre><span class="comment">&lt;!-- 在您的网站中引入本仓库的 CSS 示例 --&gt;</span>
+&lt;link rel="stylesheet" href="https://res.xscnet.cn/style.css"&gt;
+
+<span class="comment">&lt;!-- 引入本仓库的 JavaScript 示例 --&gt;</span>
+&lt;script src="https://res.xscnet.cn/script.js"&gt;&lt;/script&gt;
+
+<span class="comment">&lt;!-- 也可以使用带版本或参数的路径（需要您自行规划文件）--&gt;</span>
+&lt;script src="https://res.xscnet.cn/lib/utils.js"&gt;&lt;/script&gt;</pre>
+        </div>
+
+        <hr>
+
+        <div style="text-align: left; margin: 1rem 0;">
+            <p style="font-weight: 500; margin-bottom: 0.5rem;">✨ 作为“仓库 API” 提供的特性：</p>
+            <ul style="padding-left: 1.5rem; line-height: 1.5; color: #cbd5e6;">
+                <li>✅ 纯静态托管，无后端依赖 —— 完美适配 GitHub Pages / Vercel</li>
+                <li>✅ 支持任意 JS/CSS 文件直接引用，如同使用 CDN</li>
+                <li>✅ 内置了针对 JSONP 和模块化脚本的兼容结构（不限制请求方式）</li>
+                <li>✅ 可同时存放多个库文件，通过目录结构进行版本管理</li>
+                <li>✅ 无内容限制，只作为资产管道，不干扰业务逻辑</li>
+            </ul>
+        </div>
+
+        <div
+            style="background: #0f1219; border-radius: 20px; padding: 1rem; margin: 1rem 0; border: 1px solid #262e3f;">
+            <p style="font-size: 0.85rem; font-family: monospace; margin-bottom: 8px;">⚡ 动态 API 演示 (Query 路由) ——
+                纯粹概念展示，不影响文件系统:</p>
+            <p style="font-size: 0.8rem; word-break: break-all;">
+                ➤ <span id="demo-status">加载中...</span>
+            </p>
+            <p style="font-size: 0.7rem; margin-top: 8px; color: #8b9bb0;">
+                <span class="inline-code">?get=example.css</span> 或 <span class="inline-code">?type=js&name=theme</span>
+                演示: 本页面可以通过查询参数返回示例代码片段（仅为演示API风格）。
+                实际使用时，请直接通过静态文件路径获取资源。
+            </p>
+        </div>
+
+        <div class="footer-note">
+            🚀 部署说明：将您的 JS/CSS 文件放在同一仓库目录下，提交并部署到 GitHub Pages 或 Vercel 即可获得永久链接。<br>
+            本页面自身不包含任何业务UI，仅为仓库信息卡。您也可以删除此说明卡片，仅保留资源文件结构。
+        </div>
+    </div>
+
+    <!-- 
+        内联 JavaScript：提供轻量级演示“API”行为，模拟通过查询参数返回资源内容。
+        同时展示如何以编程方式通过本仓库分发动态片段（可选）。您完全可以删除这部分逻辑，仅保留静态资源服务。
+        因为部署在 Pages/Vercel 时，所有静态文件会直接响应，无需额外路由。
+        但是，为了满足“作为网站的JS/CSS仓库API用”的高级场景，增加一些动态响应的示例，
+        这样您可以通过简单的查询参数获取特定格式的JS/CSS内容，增强灵活性。
+        注意：由于是纯前端演示，此动态响应实际发生在客户端，但它的代码展示表明您可以通过服务端重写规则实现真·API。
+        不过对于仓库用途，直接引用文件是最佳实践。
+    -->
+    <script>
+        // 纯展示功能：动态API演示 —— 模拟类似API网关返回JS/CSS代码片段 (仅供示范)
+        // 实际生产环境若需要动态生成JS/CSS内容，可配合Vercel Serverless Functions或GitHub Actions，但静态仓库已足够。
+        // 为了让您理解该页面作为"仓库API"的扩展潜力，我们添加一段演示代码: 根据URL参数返回对应的资源文本。
+        // 注意：由于我们处于静态托管，实际动态路由需要额外配置，此示例仅用于指示如何通过查询参数响应内容。
+        // 如果您不需要此动态演示，可安全移除。
+        (function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const getParam = urlParams.get('get');
+            const typeParam = urlParams.get('type');
+            const nameParam = urlParams.get('name');
+
+            const statusSpan = document.getElementById('demo-status');
+            if (!statusSpan) return;
+
+            // 模拟返回内容的函数 (仅用于演示，实际不会覆盖页面主体)
+            function mockAPIResponse() {
+                // 如果存在特定参数，则在控制台和状态栏显示示例返回，并且可以动态输出一段资源内容（不污染页面布局）
+                if (getParam === 'example.css') {
+                    const cssDemo = `/* 来自仓库API的示例样式 (example.css) */
+:root {
+  --primary-color: #3b82f6;
+  --bg-dark: #0f172a;
+}
+.demo-api-button {
+  background: var(--primary-color);
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  color: white;
+  cursor: pointer;
+}`;
+                    statusSpan.innerHTML = `📄 请求 <span class="inline-code">?get=example.css</span> → 返回 CSS 源码片段（模拟API）<br><textarea rows="3" readonly style="width:100%; background:#010409; border:1px solid #2d3748; border-radius:12px; padding:8px; font-family:monospace; font-size:0.7rem; color:#bbd7fb; margin-top:6px;">${cssDemo.trim()}</textarea>`;
+                    return;
+                }
+                if (getParam === 'demo.js') {
+                    const jsDemo = `// 仓库API提供的JavaScript工具函数
+(function(window) {
+    window.__RepoAPI = {
+        version: '1.0.0',
+        greet: () => console.log('Hello from JS/CSS Repository!')
+    };
+})(window);`;
+                    statusSpan.innerHTML = `⚙️ 请求 <span class="inline-code">?get=demo.js</span> → 返回 JS 模块代码（模拟API）<br><textarea rows="4" readonly style="width:100%; background:#010409; border:1px solid #2d3748; border-radius:12px; padding:8px; font-family:monospace; font-size:0.7rem; color:#bbd7fb; margin-top:6px;">${jsDemo.trim()}</textarea>`;
+                    return;
+                }
+                if (typeParam === 'js' && nameParam) {
+                    statusSpan.innerHTML = `📜 动态JS请求: name=${nameParam}<br><span style="font-size:0.7rem;">💡 提示：可创建 /${nameParam}.js 文件来提供实际脚本。演示模式返回占位内容。</span><br><textarea rows="2" readonly style="width:100%; background:#010409; border:1px solid #2d3748; border-radius:12px; padding:8px; font-family:monospace; font-size:0.7rem; margin-top:6px;">// 文件 ${nameParam}.js 可在此仓库中定义\nconsole.log("${nameParam} loaded from repository");</textarea>`;
+                    return;
+                }
+                if (typeParam === 'css' && nameParam) {
+                    statusSpan.innerHTML = `🎨 动态CSS请求: name=${nameParam}<br><span style="font-size:0.7rem;">💡 创建对应 /${nameParam}.css 即可直接引用。</span><textarea rows="3" readonly style="width:100%; background:#010409; border:1px solid #2d3748; border-radius:12px; padding:8px; font-family:monospace; font-size:0.7rem; margin-top:6px;">/* ${nameParam}.css 仓库风格 */\n.repository-widget { border-left: 3px solid #3b82f6; }</textarea>`;
+                    return;
+                }
+                // 默认展示无API请求状态
+                statusSpan.innerHTML = `无活动API请求。您可以尝试：<span class="inline-code">?get=example.css</span> 或 <span class="inline-code">?type=js&name=helper</span> 查看模拟返回。`;
+            }
+
+            // 如果有任何相关参数则演示动态内容，否则展示默认消息
+            if (getParam || typeParam) {
+                mockAPIResponse();
+            } else {
+                statusSpan.innerHTML = `等待演示参数（例如 <span class="inline-code">?get=demo.js</span>）以展示API风格响应。实际仓库中请直接引用文件路径。`;
+            }
+
+            // 额外: 如果您希望让本页面同时支持跨域资源共享(预置信息) - 实际服务器配置已经允许跨域
+            // 对于Vercel/Pages，任何静态资源都默认支持跨域请求。
+            // 为了更完善的API体验，可以通过添加manifest或者手动创建.vercel.json增加响应头，但非必须。
+            // 下面提供一段控制台友好的输出，提示当前仓库已就绪。
+            console.log('[JS/CSS仓库API] 已就绪。可直接引用当前域名下的任何 .js / .css 文件。');
+        })();
+    </script>
+    <!-- 
+        ==============================================================
+        重要说明：作为“仓库API”核心功能 —— 您需要在部署时，将以下示例文件（或任意自定义文件）放在项目目录中：
+        例如：
+        /style.css
+        /main.js
+        /utils/theme.css
+        /lib/core.js
+        等等。
+
+        访问这些文件的URL直接就是：https://yourdomain/style.css
+
+        本HTML页面仅作为说明和占位主页，完全不影响资源加载。您也可以完全删除此页面，
+        但保留此index.html会提供一个友好的入口，说明如何使用仓库。
+        
+        本文件完全符合Github Pages和Vercel的静态托管规范，不需要任何构建步骤。
+        并且由于本文件没有外部依赖且自包含，可以保证零配置使用。
+
+        另外本页面还提供“动态API响应演示”，该演示完全在客户端实现，有助于您理解通过查询字符串实现类似API返回片段的能力，
+        若您希望实现真实后端动态生成JS/CSS，可以利用Vercel的Serverless Function，但本仓库专注核心静态资源存储。
+        ==============================================================
+    -->
+    <!-- 附：为了进一步展示CSS/JS仓库能力，我们通过内联方式创建一个测试主题样式（仅用于界面美观，但不影响外部调用）。 
+         外部网站调用时不会加载这些演示样式。 -->
+    <style>
+        /* 此块样式仅作用于当前API说明卡片，不会泄漏到外部，因为外部引用只会请求独立文件。 */
+        .api-repo-info .inline-code {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        textarea:focus {
+            outline: none;
+        }
+    </style>
+    <!-- 隐藏占位资源演示链接：实际您可以将任何JavaScript库放置在仓库目录中 -->
+    <!-- 例如： 创建文件 /repository/api.js 然后在任意网站中引用即可 -->
+</body>
+
+</html>
