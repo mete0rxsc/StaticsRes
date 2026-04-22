@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml xmlns:frss="https://freshrss.org/opml" version="2.0">
+  <head>
+    <title>FreshRSS</title>
+    <dateCreated>Wed, 22 Apr 2026 10:24:58 +0800</dateCreated>
+  </head>
+  <body>
+    <outline text="Blog">
+      <outline text="LiuShen's Blog" type="rss" xmlUrl="https://blog.liushen.fun/atom.xml" htmlUrl="https://blog.liushen.fun/"/>
+      <outline text="MuXiaoChen🍊" type="rss" xmlUrl="https://miraii.cn/atom.xml" htmlUrl="https://www.aimiliy.top/"/>
+      <outline text="咖啡豆子coffee的小站" type="rss" xmlUrl="https://blog.kfdzcoffee.cn/rss.xml" htmlUrl="https://blog.kfdzcoffee.cn/"/>
+      <outline text="子夜松声" type="rss" xmlUrl="https://xyzbz.cn/feed/" htmlUrl="https://xyzbz.cn/"/>
+      <outline text="文轩夜话" type="rss" xmlUrl="https://blog.awaae001.top/atom.xml" htmlUrl="https://blog.awaae001.top/"/>
+      <outline text="朱小呆" type="rss" xmlUrl="https://zhujay.com/feed/" htmlUrl="https://zhujay.com/"/>
+      <outline text="朽丘秋雨" type="rss" xmlUrl="https://koxiuqiu.cn/atom.xml" htmlUrl="https://koxiuqiu.cn/"/>
+      <outline text="瓦匠不舟" type="rss" xmlUrl="https://airy.ink/atom.xml" htmlUrl="https://airy.ink/"/>
+    </outline>
+  </body>
+</opml>
